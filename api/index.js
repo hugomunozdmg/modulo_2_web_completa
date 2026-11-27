@@ -58,4 +58,8 @@ app.delete("/borrarLibro/:title", async (req, res) => {
 })
 
 
+app.get("/prueba", (req, res) => {
+    res.send("hola")
+})
+
 
