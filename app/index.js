@@ -2,20 +2,21 @@ import { getBooks, deleteBook } from "./services/books_info_service.js";
 
 async function displayBooks() {
     document.getElementById("container").innerHTML = ""
+
+    const htmlComponent = await fetch("./components/BookCard.html")
+    const html = await htmlComponent.text()
     let data = await getBooks()
     data.result.forEach((book, index) => {
-        document.getElementById("container").innerHTML += `
-        <div>
-            <h2 id="book-title-${index}">${book.titulo}</h2>
-            <p id="book-status-${index}">${book.estado}</p>
-            <button id="book-btn-delete-${index}" class="delete-book-btn">Borrar libro</button>
-            <button id="book-btn-status-${index}" class="edit-book-btn">Marcar como leído</button>
-        </div>
-        `
+        const htmlTemplate = html
+        .replace("title_content", book.titulo)
+        .replace("status_content", book.estado)
+        .replace("index", index)
+
+        document.getElementById("container").innerHTML += htmlTemplate
     });
 
     data.result.forEach((book, index) => {
-        document.getElementById(`book-btn-delete-${index}`).addEventListener("click", async () => {
+        document.getElementById(`delete-btn-${index}`).addEventListener("click", async () => {
             await deleteBook(book.titulo)
             await displayBooks()
         })
